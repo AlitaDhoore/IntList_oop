@@ -1,65 +1,96 @@
 package intList;
 
+import java.util.Arrays;
+
+// 1. Define the API
+//	  1.1. Write a line of infernal documentation for the class, explaining what an instance represents
+//        (immutable abstractions/states, mutable abstractions)
+//    1.2. Define the abstract state space (i.e. declaring the inspectors/getters)
+//    1.3. Define the valid abstract state  spaces i.e. writing down the abstract state invariants,
+//         either as @invar clauses in the JavaDoc for the class, or as @post clauses in the JavaDoc for the inspector(s)
+//    1.4. Define and document the constructors and mutators
+//
+// 2. Implement the API
+//    2.1. Define the representation
+//         2.1.1. Define the raw concrete state space i.e. define the fields
+//         2.1.2. Define the set of valid concrete states i.e. write down the representations invariants
+//                i.e. concrete state invariants and private class invariants
+//         2.1.3 Define the mapping from valid concrete states to abstract states i.e. implement the inspectors
+//         2.1.4. Define sanity checks
+//                2.1.4.1. The inspectors should never crash when called in a valid abstract space
+//                2.1.4.2. The inspectors must map each valid concrete state to a valid abstract state
+//         2.1.5 
 public class IntList {
 	
 	/**
 	 * Each instance of this class represents a sequence of integer values.
 	 * 
-	 * @invar | array != null
+	 * @invar | elements != null
+	 * 
+	 * @representationObject
 	 */
 
+	private int [] elements;
 	public int [] getIntList() {
-		throw new RuntimeException("Not yet implemented.");}
+		return elements.clone();}
 	
+	/**
+	 * 
+	 * @post | result == getIntList().length
+	 */
+	
+	public int getLength() {
+		return elements.length;}
+	
+	/**
+	 * @pre | 0 <= index && index < getLength()
+	 * 
+	 * @inspects | this
+	 * 
+	 * @post | result == getIntList()[index]
+	 */	
+	public int getElementAt(int index) {
+		return elements[index];}
 	/**
 	 * Initializes the object with given array of integers.
 	 * 
-	 * @throws IllegalArgumentException | initialList != null
+	 * @pre | initialList != null
 	 * 
-	 * @post | initialList == getIntList()
+	 * @inspects | initialList
+	 * 
+	 * @post | Arrays.equals(getIntList(), initialList)
 	 */
+	
 	public IntList(int [] initialList) {
-		if (initialList == null)
-			throw new IllegalArgumentException("Not a valid list of integers.");
-		throw new RuntimeException("Not yet implemented.");
+		this.elements = initialList.clone();
 	}
-	
-	/**
-	 * Creates a list of integers with values given by the client.
-	 * 
-	 * @throws IllegalArgumentException | newIntList != null
-	 * @mutates | this
-	 * 
-	 * @post | getIntList() == newIntList
-	 */
-	public void setIntList( int [] newIntList) {
-		throw new RuntimeException("Not yet implemented.");}
-	
-	//public void retrieveIntList( int [] newIntList) {
-	//	throw new RuntimeException("Not yet implemented.");}
 	
 	/**
 	 * Adds an integer to the back of the list.
 	 * 
-	 * @throws IllegalArgumentException | newIntList != null
 	 * @mutates | this
 	 * 
-	 * @post | newIntList.length == old(newIntList).length + 1
-	 * @post | newIntList[newIntList.length] == lastInt
+	 * @post | getLength() == old(getLength()) + 1
+	 * @post The existing elements are unchanged
+	 * 		| Arrays.equals(getIntList(), 0, old(getLength()), old(getIntList()), 0, old(getLength()))
+	 * @post | getIntList()[old(getLength())] == element
 	 */
 		
-	public void addToIntList( int [] newIntList, int lastInt) {
-		throw new RuntimeException("Not yet implemented.");}
+	public void addToIntList( int element) {
+		elements = Arrays.copyOf(elements,  elements.length + 1);
+		elements[elements.length-1] = element;}
 	
 	/**
 	 * Removes an integer from the back of the list.
 	 * 
-	 * @throws IllegalArgumentException | newIntList != null
+	 * @pre | getLength() > 0
+	 * 
 	 * @mutates | this
 	 * 
-	 * @post | newIntList.length == old(newIntList).length - 1
-	 * @post | newIntList[newIntList.length] == old(newIntList)[old(newIntList).length-1]
+	 * @post | getLength() == old(getLength()) - 1
+	 * @post | Arrays.equals(getIntList(), 0, old(getLength()), old(getIntList()), 0, old(getLength()))
 	 */
 	public void removeFromIntList( int [] newIntList) {
-		throw new RuntimeException("Not yet implemented.");}
+		elements = Arrays.copyOf(elements,  elements.length - 1);
+	}
 }
